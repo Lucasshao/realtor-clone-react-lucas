@@ -10,5 +10,5 @@ const Spinner = () => {
     </div>
   );
 };
-
+//loading.io
 export default Spinner;
