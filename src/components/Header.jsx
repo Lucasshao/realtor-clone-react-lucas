@@ -35,7 +35,7 @@ export default function Header() {
           <ul className="flex space-x-10">
             <li
               className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
-                pathMatchRoute("/") && "text-black border-b-red-500"
+                pathMatchRoute("/") && "text-zinc-950 border-b-orange-600"
               }`}
               // &&: 逻辑与运算符，当左侧条件为真时，才会执行右侧的表达式。
               onClick={() => navigate("/")}
@@ -44,7 +44,7 @@ export default function Header() {
             </li>
             <li
               className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
-                pathMatchRoute("/offers") && "text-black border-b-red-500"
+                pathMatchRoute("/offers") && "text-zinc-950 border-b-orange-600"
               }`}
               onClick={() => navigate("/offers")}
             >
@@ -53,7 +53,7 @@ export default function Header() {
             <li
               className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
                 (pathMatchRoute("/sign-in") || pathMatchRoute("/profile")) &&
-                "text-black border-b-red-500"
+                "text-zinc-950 border-b-orange-500"
               }`}
               onClick={() => navigate("/profile")}
             >
