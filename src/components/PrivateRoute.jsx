@@ -9,5 +9,8 @@ const PrivateRoute = () => {
   }
   return loggedIn ? <Outlet /> : <Navigate to="/sign-in" />;
 };
-
+//1. outlet for adding the children inside
+//2. navigate for redirect
+//3. destructed two state from useAuthStatus
+//4.
 export default PrivateRoute;

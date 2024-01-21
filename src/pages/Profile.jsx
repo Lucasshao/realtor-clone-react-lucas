@@ -1,6 +1,9 @@
-import { getAuth } from "firebase/auth";
+import { getAuth, updateProfile } from "firebase/auth";
+import { doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { db } from "../firebase";
 
 export default function Profile() {
   const auth = getAuth();
@@ -10,10 +13,42 @@ export default function Profile() {
     email: auth.currentUser.email,
   });
   const { name, email } = formData;
-
+  //1. got information from the auth and put it inside the form data
+  //2. but just remember that you cannot get it directly need to wait until come from auth, so add the middle ware
   function onLogout() {
     auth.signOut();
     navigate("/");
+  }
+
+  const [changeDetail, setChangeDetail] = useState(false);
+  function editDetail() {
+    changeDetail && onSubmit();
+    setChangeDetail((prevState) => !prevState);
+  }
+  function onChange(e) {
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.id]: e.target.value, //id is name or email under, whatever the value change, it's going to apply the setFormData
+    }));
+  }
+
+  async function onSubmit() {
+    try {
+      if (auth.currentUser.displayName !== name) {
+        //update the display name in firebase auth
+        await updateProfile(auth.currentUser, {
+          displayName: name,
+        });
+        //update the name in the firestore
+        const docRef = doc(db, "users", auth.currentUser.uid);
+        await updateDoc(docRef, {
+          name,
+        });
+      }
+      toast.success("Profile details updated");
+    } catch (error) {
+      toast.error("Could not update the profile detail");
+    }
   }
 
   return (
@@ -27,8 +62,11 @@ export default function Profile() {
               type="text"
               id="name"
               value={name}
-              disabled
-              className="w-full px-4 py-2 mb-6 text-xl text-gray-700 transition ease-in-out bg-white border border-gray-300 rounded"
+              disabled={!changeDetail}
+              onChange={onChange}
+              className={`w-full px-4 py-2 mb-6 text-xl text-gray-700 transition ease-in-out bg-white border border-gray-300 rounded ${
+                changeDetail && "bg-red-200 focus:bg-red-200"
+              }`}
             />
             {/* Email input */}
             <input
@@ -42,8 +80,11 @@ export default function Profile() {
             <div className="flex justify-between mb-6 text-sm whitespace-nowrap sm:text-lg">
               <p className="flex items-center ">
                 Do you want to change your name?
-                <span className="ml-1 text-red-600 transition duration-200 ease-in-out cursor-pointer hover:text-red-700">
-                  Edit
+                <span
+                  onClick={editDetail} //make this one a function and return it
+                  className="ml-1 text-red-600 transition duration-200 ease-in-out cursor-pointer hover:text-red-700"
+                >
+                  {changeDetail ? "Apply change" : "Edit"}
                 </span>
               </p>
               <p
