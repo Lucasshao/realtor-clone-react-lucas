@@ -1,6 +1,7 @@
 import { getAuth, updateProfile } from "firebase/auth";
 import {
   collection,
+  deleteDoc,
   doc,
   getDocs,
   orderBy,
@@ -96,6 +97,21 @@ export default function Profile() {
    * setLoading(false);: 最后，将加载状态设置为 false，表示数据加载完成。
    */
 
+  async function onDelete(listingID) {
+    if (window.confirm("Are you sure you want to delete?")) {
+      await deleteDoc(doc(db, "listings", listingID));
+      const updatedListings = listings.filter(
+        (listing) => listing.id !== listingID
+      ); //look through these listings and keep everything except the listingID one
+      setListings(updatedListings);
+      toast.success("Successfully deleted the listing");
+    }
+  }
+
+  function onEdit(listingID) {
+    navigate(`/edit-listing/${listingID}`);
+  }
+
   return (
     <>
       <section className="flex flex-col items-center justify-center max-w-6xl mx-auto">
@@ -172,8 +188,8 @@ export default function Profile() {
                     key={listing.id}
                     id={listing.id}
                     listing={listing.data}
-                    // onDelete={() => onDelete(listing.id)}
-                    // onEdit={() => onEdit(listing.id)}
+                    onDelete={() => onDelete(listing.id)}
+                    onEdit={() => onEdit(listing.id)}
                   />
                 ))}
               </ul>
