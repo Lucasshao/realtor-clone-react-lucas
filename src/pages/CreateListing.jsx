@@ -208,21 +208,21 @@ export default function CreateListing() {
     navigate(`/category/${formDataCopy.type}/${docRef.id}`);
     /**const formDataCopy = { ...formData, imgUrls, geolocation, timestamp: serverTimestamp(), userRef: auth.currentUser.uid };: 这行代码创建了一个新对象 formDataCopy，它是表单数据 formData 的一个副本，但加入了额外的属性 imgUrls、geolocation、timestamp、userRef。其中 imgUrls 存储图片的URL数组，geolocation 存储地理位置信息，timestamp 存储服务器的时间戳，userRef 存储当前用户的UID。
 
-delete formDataCopy.images;: 这行代码从 formDataCopy 对象中删除了 images 属性。
+    delete formDataCopy.images;: 这行代码从 formDataCopy 对象中删除了 images 属性。
 
-!formDataCopy.offer && delete formDataCopy.discountedPrice;: 如果 formDataCopy.offer 为假值（即假值包括 false、null、undefined、''、0、NaN），则删除 formDataCopy 中的 discountedPrice 属性。
+    !formDataCopy.offer && delete formDataCopy.discountedPrice;: 如果 formDataCopy.offer 为假值（即假值包括 false、null、undefined、''、0、NaN），则删除 formDataCopy 中的 discountedPrice 属性。
 
-delete formDataCopy.latitude; 和 delete formDataCopy.longitude;: 分别从 formDataCopy 对象中删除 latitude 和 longitude 属性。
+    delete formDataCopy.latitude; 和 delete formDataCopy.longitude;: 分别从 formDataCopy 对象中删除 latitude 和 longitude 属性。
 
-const docRef = await addDoc(collection(db, "listings"), formDataCopy);: 这行代码使用 addDoc() 方法向指定集合（listings）添加一个新文档，文档的内容是 formDataCopy 对象。它返回一个表示添加的文档的引用。
+    const docRef = await addDoc(collection(db, "listings"), formDataCopy);: 这行代码使用 addDoc() 方法向指定集合（listings）添加一个新文档，文档的内容是 formDataCopy 对象。它返回一个表示添加的文档的引用。
 
-setLoading(false);: 这行代码取消加载状态。
+    setLoading(false);: 这行代码取消加载状态。
 
-toast.success("Listing created");: 这行代码显示一个成功提示，表示列表项已成功创建。
+    toast.success("Listing created");: 这行代码显示一个成功提示，表示列表项已成功创建。
 
-navigate(/category/${formDataCopy.type}/${docRef.id});: 这行代码使用导航工具（比如 React Router 的 navigate 函数）导航到新创建的列表项所属的类别页面，并将新创建的列表项的类型和ID作为路径的一部分。
+    navigate(/category/${formDataCopy.type}/${docRef.id});: 这行代码使用导航工具（比如 React Router 的 navigate 函数）导航到新创建的列表项所属的类别页面，并将新创建的列表项的类型和ID作为路径的一部分。
 
-总之，这段代码是一个完整的数据处理流程，它处理了表单数据，执行了添加文档到数据库的操作，并显示了相应的提示信息。 */
+    总之，这段代码是一个完整的数据处理流程，它处理了表单数据，执行了添加文档到数据库的操作，并显示了相应的提示信息。 */
   }
 
   if (loading) {

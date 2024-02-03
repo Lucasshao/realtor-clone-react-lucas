@@ -84,6 +84,17 @@ export default function Profile() {
     }
     fetchUserListings();
   }, [auth.currentUser.uid]);
+  /**
+   * useEffect(() => { ... }, [auth.currentUser.uid]);: 这里使用了useEffect hook来处理副作用。它接受一个函数作为第一个参数，这个函数包含了需要进行的副作用操作。第二个参数是一个依赖数组，表示只有当数组中的依赖发生变化时，才会重新执行useEffect中的函数。在这个例子中，只有auth.currentUser.uid发生变化时，才会重新执行useEffect。
+   * async function fetchUserListings() { ... }: 这是一个异步函数fetchUserListings，它用于从数据库中获取当前用户的列表数据。
+   * const listingRef = collection(db, "listings");: 这行代码创建了一个指向 "listings" 集合的引用。
+   * const q = query(listingRef, ...);: 这行代码创建了一个查询，查询 "listings" 集合中userRef字段等于当前用户的uid的文档，并按照timestamp字段降序排列。
+   * const querySnap = await getDocs(q);: 这行代码执行了查询操作，并等待获取到查询结果。getDocs 函数用于获取查询的快照。
+   * let listings = [];: 这行代码创建了一个空数组listings，用于存储查询结果中的文档数据。
+   * querySnap.forEach((doc) => { ... });: 这是一个遍历查询结果的循环，它将查询结果中的每个文档转换为一个对象，包含文档的ID和数据，然后将这些对象添加到listings数组中。
+   * setListings(listings);: 这行代码使用setListings函数将获取到的列表数据设置到组件的状态中，以便在组件中使用。
+   * setLoading(false);: 最后，将加载状态设置为 false，表示数据加载完成。
+   */
 
   return (
     <>
@@ -144,24 +155,30 @@ export default function Profile() {
         </div>
       </section>
       <div className="max-w-6xl px-3 mx-auto mt-6">
-        {!loading && listings.length > 0 && (
-          <>
-            <h2 className="mb-6 text-2xl font-semibold text-center">
-              My Listings
-            </h2>
-            <ul className="grid-cols-2 sm:grid lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-              {listings.map((listing) => (
-                <ListingItem
-                  key={listing.id}
-                  id={listing.id}
-                  listing={listing.data}
-                  // onDelete={() => onDelete(listing.id)}
-                  // onEdit={() => onEdit(listing.id)}
-                />
-              ))}
-            </ul>
-          </>
-        )}
+        {!loading &&
+          listings.length > 0 && ( //这里因为上来执行fetchUserListings（after the data fetch)，loading从开始的true变成false了，这里再反转就能&&
+            <>
+              <h2 className="mb-6 text-2xl font-semibold text-center">
+                My Listings
+              </h2>
+              <ul className="grid-cols-2 sm:grid lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+                {/* grid-cols-2: 表示在网格布局中，每行有两列。
+                    sm:grid: 在小屏幕尺寸上（sm 表示小屏幕），使用网格布局。
+                    lg:grid-cols-3: 在大屏幕尺寸上（lg 表示大屏幕），每行有三列。
+                    xl:grid-cols-4: 在超大屏幕尺寸上（xl 表示超大屏幕），每行有四列。
+                    2xl:grid-cols-5: 在超超大屏幕尺寸上（2xl 表示超超大屏幕），每行有五列。 */}
+                {listings.map((listing) => (
+                  <ListingItem
+                    key={listing.id}
+                    id={listing.id}
+                    listing={listing.data}
+                    // onDelete={() => onDelete(listing.id)}
+                    // onEdit={() => onEdit(listing.id)}
+                  />
+                ))}
+              </ul>
+            </>
+          )}
       </div>
     </>
   );
