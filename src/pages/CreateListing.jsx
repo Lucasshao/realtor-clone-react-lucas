@@ -146,8 +146,40 @@ export default function CreateListing() {
             });
           }
         );
+        /**
+         * uploadTask.on() 方法包含三个参数，每个参数都是一个回调函数，分别对应不同的状态或事件。在你的代码示例中，uploadTask.on() 包含了三个回调函数，分别用于处理不同的情况：
+
+        状态改变回调函数 (State change callback)：这个回调函数在上传任务的状态发生变化时被调用，它接收一个参数 snapshot，用于描述当前上传任务的状态。在你的代码中，第一个参数 (snapshot) => { ... } 就是用来处理状态变化的回调函数。
+
+        错误回调函数 (Error callback)：这个回调函数在上传过程中出现错误时被调用，它接收一个参数 error，用于描述出现的错误。在你的代码中，第二个参数 (error) => { ... } 就是用来处理错误的回调函数。
+
+        完成回调函数 (Completion callback)：这个回调函数在上传任务成功完成时被调用，它不接收任何参数。在你的代码中，第三个参数 () => { ... } 就是用来处理上传成功完成的回调函数。
+
+        所以，uploadTask.on() 方法中包含的是三个回调函数，分别用于处理状态变化、错误和上传成功完成这三种情况。 */
       });
     }
+
+    /**
+     * async function storeImage(image) { ... }: 这是一个异步函数的声明，意味着函数体内可以包含异步操作，函数执行会返回一个 Promise 对象。
+
+    return new Promise((resolve, reject) => { ... }): 在函数体内部，它创建了一个新的 Promise 对象，用于处理图片上传过程中的异步操作。resolve 和 reject 是 Promise 的两个回调函数，用于在异步操作成功或失败时解决或拒绝 Promise。
+
+    const storage = getStorage();: 这一行获取了 Firebase Storage 的引用。
+
+    const filename = ${auth.currentUser.uid}-${image.name}-${uuidv4()};: 这里生成了一个唯一的文件名，结合了用户的UID、图片的原始名称和一个随机生成的UUID。
+
+    const storageRef = ref(storage, filename);: 这行创建了一个指向指定路径的存储引用，即创建了一个指向图片存储位置的引用。
+
+    const uploadTask = uploadBytesResumable(storageRef, image);: 这行创建了一个可暂停和恢复的字节上传任务，该任务用于将图片以字节的形式上传到指定的存储引用。
+
+    uploadTask.on(...)：这里使用了 uploadTask.on() 方法来监听上传任务的不同状态，如进度、暂停、继续等。在其中包含了对上传过程中的状态的处理。
+
+    (error) => { reject(error); }: 如果上传过程中出现错误，就会调用 reject 函数并传递错误对象。
+
+    () => { ... }: 当图片成功上传后，会执行这个回调函数，在其中获取了上传图片的下载URL，并通过 resolve 函数将下载URL解决为 Promise 的结果。
+
+    总之，这段代码是一个用于上传图片到 Firebase Storage 的异步函数，它通过 Promise 对象管理了上传过程中的异步操作，并在上传成功或失败时返回相应的结果。
+     */
 
     const imgUrls = await Promise.all(
       [...images].map((image) => storeImage(image))
@@ -156,7 +188,9 @@ export default function CreateListing() {
       toast.error("Images not uploaded");
       return;
     });
-
+    /**
+     * 并行执行： map方法允许你对数组中的每个元素执行相同的操作，Promise.all()允许多个异步操作同时进行，提高了效率。 等待所有操作完成：它等待所有的Promise都解决后再返回结果，这在某些情况下是必要的，比如需要所有图片都上传完毕后再进行下一步操作。 简洁性：使用Promise.all()可以使代码更加简洁和易于理解。
+      Promise.all()方法接受一个Promise数组作为参数，它会等待所有的Promise都被解决（resolved）后返回一个包含所有Promise解决值的数组。在这里，Promise.all()会等待所有图片上传的Promise都解决后返回。 [...images].map((image) => storeImage(image)): 这一行代码是一个数组的映射操作。假设images是一个类数组对象（比如一个DOM节点列表），[...images]将其转换为真正的数组，然后调用map()方法。map()方法对数组中的每个元素执行给定的函数，这里是storeImage(image)，它返回一个Promise，表示图片上传的过程。*/
     const formDataCopy = {
       ...formData,
       imgUrls,
@@ -172,6 +206,23 @@ export default function CreateListing() {
     setLoading(false);
     toast.success("Listing created");
     navigate(`/category/${formDataCopy.type}/${docRef.id}`);
+    /**const formDataCopy = { ...formData, imgUrls, geolocation, timestamp: serverTimestamp(), userRef: auth.currentUser.uid };: 这行代码创建了一个新对象 formDataCopy，它是表单数据 formData 的一个副本，但加入了额外的属性 imgUrls、geolocation、timestamp、userRef。其中 imgUrls 存储图片的URL数组，geolocation 存储地理位置信息，timestamp 存储服务器的时间戳，userRef 存储当前用户的UID。
+
+delete formDataCopy.images;: 这行代码从 formDataCopy 对象中删除了 images 属性。
+
+!formDataCopy.offer && delete formDataCopy.discountedPrice;: 如果 formDataCopy.offer 为假值（即假值包括 false、null、undefined、''、0、NaN），则删除 formDataCopy 中的 discountedPrice 属性。
+
+delete formDataCopy.latitude; 和 delete formDataCopy.longitude;: 分别从 formDataCopy 对象中删除 latitude 和 longitude 属性。
+
+const docRef = await addDoc(collection(db, "listings"), formDataCopy);: 这行代码使用 addDoc() 方法向指定集合（listings）添加一个新文档，文档的内容是 formDataCopy 对象。它返回一个表示添加的文档的引用。
+
+setLoading(false);: 这行代码取消加载状态。
+
+toast.success("Listing created");: 这行代码显示一个成功提示，表示列表项已成功创建。
+
+navigate(/category/${formDataCopy.type}/${docRef.id});: 这行代码使用导航工具（比如 React Router 的 navigate 函数）导航到新创建的列表项所属的类别页面，并将新创建的列表项的类型和ID作为路径的一部分。
+
+总之，这段代码是一个完整的数据处理流程，它处理了表单数据，执行了添加文档到数据库的操作，并显示了相应的提示信息。 */
   }
 
   if (loading) {
