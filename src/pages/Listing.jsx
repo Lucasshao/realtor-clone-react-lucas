@@ -188,9 +188,7 @@ export default function Listing() {
               position={[listing.geolocation.lat, listing.geolocation.lng]}
             >
               {/* 这里lat和lng是under geolocation的在数据库里 */}
-              <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable.
-              </Popup>
+              <Popup>{listing.address}</Popup>
             </Marker>
           </MapContainer>
         </div>
