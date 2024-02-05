@@ -42,6 +42,7 @@ export default function Contact({ userRef, listing }) {
           <a
             href={`mailto:${landlord.email}?Subject=${listing.name}&body=${message}`}
           >
+            {/* 这里可以学一下 */}
             <button
               className="w-full py-3 mb-6 text-sm text-center text-white uppercase transition duration-150 ease-in-out bg-blue-600 rounded shadow-md px-7 hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg active:bg-blue-800 active:shadow-lg"
               type="button"
