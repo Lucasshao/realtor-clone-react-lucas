@@ -92,7 +92,7 @@ export default function Listing() {
       )}
 
       <div className="flex flex-col max-w-6xl p-4 m-4 bg-white rounded-lg shadow-lg md:flex-row lg:mx-auto lg:space-x-5">
-        <div className=" w-full h-[200px] lg-[400px]">
+        <div className="w-full ">
           <p className="mb-3 text-2xl font-bold text-blue-900">
             {listing.name} - ${" "}
             {listing.offer
@@ -125,7 +125,7 @@ export default function Listing() {
             <span className="font-semibold "> Description - </span>
             {listing.description}
           </p>
-          <ul className="flex items-center space-x-2 text-sm font-semibold lg:space-x-10">
+          <ul className="flex items-center mb-6 space-x-2 text-sm font-semibold lg:space-x-10">
             <li className="flex items-center whitespace-nowrap">
               <FaBed className="mr-1 text-lg " />
               {+listing.bedrooms > 1 ? `${listing.bedrooms} Beds` : "1 Bed"}
@@ -143,6 +143,34 @@ export default function Listing() {
               {listing.furnished ? "Furnished" : "Not furnished"}
             </li>
           </ul>
+          {listing.userRef !== auth.currentUser?.uid && !contactLandlord && (
+            <div className="mt-6">
+              <button
+                onClick={() => setContactLandlord(true)}
+                className="w-full py-3 text-sm font-medium text-center text-white uppercase transition duration-150 ease-in-out bg-blue-600 rounded shadow-md px-7 hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg "
+              >
+                Contact Landlord
+              </button>
+            </div>
+          )}
+          {contactLandlord && (
+            <Contact userRef={listing.userRef} listing={listing} />
+          )}
+          {/* 使用 useState hook 来定义了一个名为 contactLandlord 的状态以及用于更新该状态的函数 setContactLandlord。初始状态为 false，表示默认情况下用户还没有点击 "Contact Landlord" 按钮。
+
+在 JSX 中，根据条件渲染了两个部分：
+
+第一个部分是一个按钮 "Contact Landlord"，它会在用户点击后改变 contactLandlord 状态为 true，从而触发下一部分的渲染。
+
+第二个部分是一个 Contact 组件，它会在 contactLandlord 状态为 true 时渲染，向房东发送联系信息。
+
+现在让我逐步解释这段代码的逻辑：
+
+{listing.userRef !== auth.currentUser?.uid && !contactLandlord && (...)}: 这部分代码是一个条件渲染的逻辑。它首先检查 listing.userRef 是否等于当前用户的 uid，并且确保 contactLandlord 状态为 false。如果这些条件都满足，则渲染 "Contact Landlord" 按钮。
+
+<button onClick={() => setContactLandlord(true)} ...>: 这是 "Contact Landlord" 按钮的 JSX 定义。当用户点击按钮时，会触发 setContactLandlord(true)，从而将 contactLandlord 状态更新为 true，接着触发重新渲染。
+
+{contactLandlord && (...)}: 这部分代码是另一个条件渲染的逻辑。它检查 contactLandlord 状态是否为 true。如果是 true，则渲染 <Contact userRef={listing.userRef} listing={listing} />，即联系房东的组件。 */}
         </div>
 
         <div className="bg-blue-300 w-full h-[200px] lg-[400px] z-10 overflow-x-hidden"></div>
