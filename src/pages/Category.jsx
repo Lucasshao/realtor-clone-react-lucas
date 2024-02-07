@@ -113,7 +113,7 @@ export default function Category() {
           {params.categoryName === "rent"
             ? "places for rent"
             : "places for sale"}
-        </p>
+        </p> //use params.categoryName
       )}
     </div>
   );
